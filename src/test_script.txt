@@ -1,0 +1,3 @@
+This script substitutes the database name provided.
+In this line, --> $DB_NAME <-- should be replaced.
+Did it work?
