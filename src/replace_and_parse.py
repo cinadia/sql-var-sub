@@ -2,6 +2,10 @@ import argparse
 from sqlalchemy import create_engine
 from collections import OrderedDict
 
+# Docker
+#ENGINE_URL = 'postgresql://postgres:postgres@localhost:5129/postgres'
+
+
 def execute_query(query, ENGINE_URL):
     engine = create_engine(ENGINE_URL)  # sqlalchemy engine
     print("executing....")
@@ -55,9 +59,9 @@ var_replacement_parser.add_argument('--filename', help='the name of the SQL file
 # add engine URL argument
 var_replacement_parser.add_argument('--ENGINE_URL', help='the engine URL to connect to the database')
 # add database name to replace
-var_replacement_parser.add_argument('--DB_NAME', default='DB', help='the name of the database to replace in the file')
+var_replacement_parser.add_argument('--DB_NAME', default='DB', help='the name of the database to replace in the file; default: DB')
 # add role name to replace
-var_replacement_parser.add_argument('--ROLE', default='postgres', help='the name of the role to replace in the file')
+var_replacement_parser.add_argument('--ROLE', default='postgres', help='the name of the role to replace in the file; default: postgres')
 # add password to replace
 var_replacement_parser.add_argument('--PASSWORD', help='the password to replace in the file')
 
