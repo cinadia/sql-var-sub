@@ -2,10 +2,6 @@ import argparse
 from sqlalchemy import create_engine
 from collections import OrderedDict
 
-# Docker
-#ENGINE_URL = 'postgresql://postgres:postgres@localhost:5129/postgres'
-
-
 def execute_query(query, ENGINE_URL):
     engine = create_engine(ENGINE_URL)  # sqlalchemy engine
     print("executing....")
