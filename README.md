@@ -10,13 +10,18 @@ The following strings are replaceable if included in the .sql file:
 
 ## Running (Windows)
 cd into `src` directory
+
 `py replace_and_parse.py var-replace --filename=provided_filename.sql --ENGINE_URL=provided_url --DB_NAME=provided_name --ROLE=provided_role --PASSWORD=provided_password`
 
 ## Docs
 `filename`: required; the name of the file
+
 `ENGINE_URL`: required; the URL of the database to connect to 
+
 `DB_NAME`: not required; the database name to replace in the file; default: DB
+
 `ROLE`: not required; the role to replace in the file; default: postgres
+
 `PASSWORD`: not required; the password to replace in the file
  
  ## Robustness
