@@ -1,14 +1,22 @@
 import argparse
+
+import psycopg2
 from sqlalchemy import create_engine
 from collections import OrderedDict
+
+# engine url format: postgresql://user:pass@localhost:5432/database
 
 def execute_query(query, ENGINE_URL):
     engine = create_engine(ENGINE_URL)  # sqlalchemy engine
     print("executing....")
     try:
         engine.connect().execute(query)
+    except psycopg2.OperationalError:
+        raise Exception('Connection error.')
+    except psycopg2.errors.SyntaxError:
+        raise Exception('Syntax error. Check that the SQL in the file provided has correct syntax.')
     except:
-        raise Exception('Invalid query') # Error message: Invalid input, Please refer to the --help option
+        raise Exception('Invalid query.')
 
 
 def replace(line, args):
@@ -21,28 +29,33 @@ def replace(line, args):
 
 
 def execute(args):
-    with open(args.filename) as f:
-        lines = [line.rstrip() for line in f]
+    # valid parameters, help and meaningful catch-all
+    try:
+        with open(args.filename) as f:
+            lines = [line.rstrip() for line in f]
 
-        if len(lines) == 0:
-            raise Exception('Cannot parse an empty file')
+            #print('parsing file........')
 
-        current_query = ""
-        for line in lines:
-            # variable replacement
-            new_line = replace(line, args)
-            first_chars = new_line[0:2]
-            if new_line != "" and first_chars != "--":
-                # begin parsing the line only if it isn't blank and isn't a comment
-                last_char = new_line[-1]
-                if last_char == ";":
-                    current_query = current_query + " " + new_line
-                    print("executed query:", current_query)
-                    execute_query(current_query, args.ENGINE_URL)
-                    current_query = ""
-                else:
-                    current_query = current_query + " " + new_line
+            if len(lines) == 0:
+                raise Exception('Cannot parse an empty file')
 
+            current_query = ""
+            for line in lines:
+                # variable replacement
+                new_line = replace(line, args)
+                first_chars = new_line[0:2]
+                if new_line != "" and first_chars != "--":
+                    # begin parsing the line only if it isn't blank and isn't a comment
+                    last_char = new_line[-1]
+                    if last_char == ";":
+                        current_query = current_query + " " + new_line
+                        print("executed query:", current_query)
+                        execute_query(current_query, args.ENGINE_URL)
+                        current_query = ""
+                    else:
+                        current_query = current_query + " " + new_line
+    except FileNotFoundError:
+        print('File not found.')
 
 # add parsers
 parser = argparse.ArgumentParser()
